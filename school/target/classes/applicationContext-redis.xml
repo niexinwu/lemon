@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">  
+
+
+    <bean id="jedisPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+		<!-- <property name="maxActive" value="${redis.pool.maxActive}" /> 
+		<property name="maxIdle" value="${redis.pool.maxIdle}" />
+		<property name="maxWait" value="${redis.pool.maxWait}" />-->
+		<property name="testOnBorrow" value="#{demoProps[redis_pool_testOnBorrow]}"/>
+		<property name="testOnReturn" value="#{demoProps[redis_pool_testOnReturn]}"/>
+    </bean>
+     <bean id="redisSentinelJedisPool" class="com.xdf.ielts.util.redis.RedisSentinelJedisPool" init-method="initMethod">
+        <constructor-arg index="0" value="#{demoProps[redis_master_name]}" />
+        <constructor-arg index="1">
+            <set>
+               <bean class="java.lang.String">
+                    <constructor-arg  value="#{demoProps[redis_sentinel_server1]}"/>
+                </bean>
+                <bean class="java.lang.String">
+                    <constructor-arg  value="#{demoProps[redis_sentinel_server2]}"/>
+                </bean> 
+                 <bean class="java.lang.String">
+                    <constructor-arg  value="#{demoProps[redis_sentinel_server3]}"/>
+                </bean> 
+            </set>
+        </constructor-arg>
+        <constructor-arg index="2" value="#{demoProps[redis_sentinel_pwd]}" />
+        <constructor-arg index="3" ref="jedisPoolConfig" />
+    </bean>
+</beans>
+

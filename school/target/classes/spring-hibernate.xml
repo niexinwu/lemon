@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="readWriteDataSource" />
+		<property name="packagesToScan" value="com.lemon.sp.dbmodal" />
+		<property name="hibernateProperties">
+			<props>
+				<!-- <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop> -->
+				<!-- SQL dialect -->
+				<!-- <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop> -->
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+
+				<!-- <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop> -->
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext
+				</prop>
+				<prop key="current_session_context_class">thread</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- <prop key="hibernate.hbm2ddl.auto">update</prop> -->
+				<prop key="hibernate.format_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="#{demoProps[driver]}" />
+		<property name="url" value="#{demoProps[read_url]}" />
+		<property name="username" value="#{demoProps[read_username]}" />
+		<property name="password" value="#{demoProps[read_password]}" />
+		<!--maxActive: �?��连接数量 -->
+		<property name="maxActive" value="200" />
+		<!--minIdle: �?��空闲连接 -->
+		<property name="minIdle" value="5" />
+		<!--maxIdle: �?��空闲连接 -->
+		<property name="maxIdle" value="20" />
+		<!--initialSize: 初始化连�?-->
+		<property name="initialSize" value="30" />
+		<!-- 连接被泄露时是否打印 -->
+		<property name="logAbandoned" value="true" />
+		<!--removeAbandoned: 是否自动回收超时连接 -->
+		<property name="removeAbandoned" value="true" />
+		<!--removeAbandonedTimeout: 超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10" />
+		<!--maxWait: 超时等待时间以毫秒为单位 1000等于60�?-->
+		<property name="maxWait" value="1000" />
+		<!-- 在空闲连接回收器线程运行期间休眠的时间�?,以毫秒为单位. -->
+		<property name="timeBetweenEvictionRunsMillis" value="10000" />
+		<!-- 在每次空闲连接回收器线程(如果�?运行时检查的连接数量 -->
+		<property name="numTestsPerEvictionRun" value="10" />
+		<!-- 1000 * 60 * 30 连接在池中保持空闲�?不被空闲连接回收器线�?-->
+		<property name="minEvictableIdleTimeMillis" value="10000" />
+		<!-- 验证使用的SQL语句 -->
+		<property name="validationQuery" value="SELECT NOW() FROM DUAL" />
+	</bean>
+
+</beans>                          
